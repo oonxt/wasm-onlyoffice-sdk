@@ -1,0 +1,52 @@
+{
+  "name": "wasm-onlyoffice-sdk",
+  "version": "0.1.0",
+  "description": "Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.mjs",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./vue": {
+      "import": "./dist/vue/index.mjs",
+      "types": "./dist/vue/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "vite build -c vite.react.config.ts && vite build -c vite.vue.config.ts",
+    "build:react": "vite build -c vite.react.config.ts",
+    "build:vue": "vite build -c vite.vue.config.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "vue": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "vue": { "optional": true }
+  },
+  "dependencies": {
+    "eventemitter3": "^5.0.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0",
+    "vue": "^3.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}
