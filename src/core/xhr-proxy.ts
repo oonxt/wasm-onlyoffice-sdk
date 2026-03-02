@@ -9,13 +9,13 @@ export interface XHRMiddleware {
  */
 export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
   return class ProxyXMLHttpRequest extends BaseXHR {
-    private static _middlewares: XHRMiddleware[] = [];
+    static _middlewares: XHRMiddleware[] = [];
 
-    private _isMocked: boolean = false;
-    private _requestMethod: string = "GET";
-    private _requestUrl: string = "";
-    private _requestHeaders: Headers = new Headers();
-    private _requestBody: any = null;
+    #isMocked: boolean = false;
+    #requestMethod: string = "GET";
+    #requestUrl: string = "";
+    #requestHeaders: Headers = new Headers();
+    #requestBody: any = null;
 
     /**
      * Register global middleware
@@ -38,10 +38,10 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
       username?: string | null,
       password?: string | null,
     ): void {
-      this._requestMethod = method;
-      this._requestUrl = url.toString();
-      this._requestHeaders = new Headers();
-      this._isMocked = false;
+      this.#requestMethod = method;
+      this.#requestUrl = url.toString();
+      this.#requestHeaders = new Headers();
+      this.#isMocked = false;
 
       // Call native open
       super.open(
@@ -54,19 +54,19 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
     }
 
     setRequestHeader(name: string, value: string): void {
-      this._requestHeaders.append(name, value);
+      this.#requestHeaders.append(name, value);
 
       // If it is not a mock request, also set it on the native XHR
-      if (!this._isMocked) {
+      if (!this.#isMocked) {
         super.setRequestHeader(name, value);
       }
     }
 
     send(body?: Document | XMLHttpRequestBodyInit | null): void {
-      this._requestBody = body;
+      this.#requestBody = body;
 
       // Try to run middleware
-      this._tryMiddlewares()
+      this.#tryMiddlewares()
         .then((handled) => {
           if (!handled) {
             // No middleware handled it, use native send
@@ -80,14 +80,14 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
         });
     }
 
-    private async _tryMiddlewares(): Promise<boolean> {
+    async #tryMiddlewares(): Promise<boolean> {
       // Create Request object
       let request: Request;
       try {
         const reqInit: RequestInit = {
-          method: this._requestMethod,
-          headers: this._requestHeaders,
-          body: this._requestBody as BodyInit,
+          method: this.#requestMethod,
+          headers: this.#requestHeaders,
+          body: this.#requestBody as BodyInit,
           mode: "cors",
         };
 
@@ -95,12 +95,12 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
           reqInit.credentials = "include";
         }
 
-        request = new Request(this._requestUrl, reqInit);
+        request = new Request(this.#requestUrl, reqInit);
         console.log("ProxyXHR created request:", {
-          url: this._requestUrl,
+          url: this.#requestUrl,
           method: request.method,
           hasBody: !!request.body,
-          originalBody: this._requestBody,
+          originalBody: this.#requestBody,
         });
       } catch (e) {
         // Unable to create Request, do not use middleware
@@ -111,8 +111,8 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
       for (const mw of ProxyXMLHttpRequest._middlewares) {
         const response = await mw(request.clone());
         if (response) {
-          this._isMocked = true;
-          await this._handleMockResponse(response);
+          this.#isMocked = true;
+          await this.#handleMockResponse(response);
           return true;
         }
       }
@@ -120,7 +120,7 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
       return false;
     }
 
-    private async _handleMockResponse(response: Response) {
+    async #handleMockResponse(response: Response) {
       // 1. Trigger loadstart
       this.dispatchEvent(new ProgressEvent("loadstart"));
 

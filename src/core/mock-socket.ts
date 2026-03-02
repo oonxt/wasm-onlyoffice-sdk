@@ -73,7 +73,7 @@ export class MockSocket<
   private _debug: boolean;
 
   constructor(options: MockSocketOptions = {}) {
-    this._debug = options.debug ?? process.env?.NODE_ENV === "development";
+    this._debug = options.debug ?? false;
     this.connect(); // Auto-connect on instantiation
   }
 
