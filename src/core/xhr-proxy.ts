@@ -96,12 +96,6 @@ export function createXHRProxy(BaseXHR = globalThis.XMLHttpRequest) {
         }
 
         request = new Request(this.#requestUrl, reqInit);
-        console.log("ProxyXHR created request:", {
-          url: this.#requestUrl,
-          method: request.method,
-          hasBody: !!request.body,
-          originalBody: this.#requestBody,
-        });
       } catch (e) {
         // Unable to create Request, do not use middleware
         return false;

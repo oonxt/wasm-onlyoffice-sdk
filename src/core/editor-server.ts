@@ -48,8 +48,6 @@ export class EditorServer {
   private downloadId: string = "";
   private downloadParts: Uint8Array[] = [];
 
-  private options: any = {};
-
   constructor({ x2tPath = '/x2t-1', user }: { x2tPath?: string; user?: User } = {}) {
     this.converter = new X2tConverter(x2tPath)
     if (user) this.user = user
@@ -195,8 +193,6 @@ export class EditorServer {
   }
 
   handleConnect({ socket }: { socket: MockSocket }) {
-    console.log("connect: ", socket);
-
     this.socket = socket;
     const { send, sessionId } = this;
 
@@ -257,8 +253,6 @@ export class EditorServer {
   }
 
   async handleMessage(msg: any, ...args: unknown[]) {
-    console.log("[msg]: ", msg, args);
-
     const { send, sessionId, participants, user } = this;
     switch (msg.type) {
       case "auth":

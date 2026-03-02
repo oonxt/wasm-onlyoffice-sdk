@@ -7,7 +7,7 @@ interface PendingMessage {
 
 interface WorkerResponse {
   id: number
-  type: string
+  type: 'ready' | 'init:done' | 'convert:done' | 'error'
   payload?: any
   error?: string
 }

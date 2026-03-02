@@ -187,7 +187,7 @@ export const enum AvsFileType {
 }
 
 export interface X2tConvertParams {
-  data: ArrayBuffer | never;
+  data: ArrayBuffer;
   fileFrom: string;
   fileTo: string;
   formatFrom?: number;

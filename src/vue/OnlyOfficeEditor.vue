@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+
+defineOptions({ inheritAttrs: false })
 import { EditorServer } from '../core/editor-server'
 import { MockSocket, io } from '../core/mock-socket'
 import { createXHRProxy } from '../core/xhr-proxy'
@@ -139,7 +141,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div style="width: 100%; height: 100%">
+  <div v-bind="$attrs" style="width: 100%; height: 100%">
     <div id="placeholder" style="width: 100%; height: 100%">
       <iframe
         style="width: 0; height: 0; display: none"
