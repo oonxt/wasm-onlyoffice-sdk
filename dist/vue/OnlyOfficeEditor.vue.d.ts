@@ -10,13 +10,13 @@ interface Props {
     user?: User;
 }
 declare const _default: import('vue').DefineComponent<Props, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {
-    error: (error: Error) => any;
     ready: () => any;
+    error: (error: Error) => any;
     save: (blob: Blob, filename: string) => any;
     documentStateChange: (isDirty: boolean) => any;
 }, string, import('vue').PublicProps, Readonly<Props> & Readonly<{
-    onError?: ((error: Error) => any) | undefined;
     onReady?: (() => any) | undefined;
+    onError?: ((error: Error) => any) | undefined;
     onSave?: ((blob: Blob, filename: string) => any) | undefined;
     onDocumentStateChange?: ((isDirty: boolean) => any) | undefined;
 }>, {
@@ -24,6 +24,6 @@ declare const _default: import('vue').DefineComponent<Props, {}, {}, {}, {}, imp
     user: User;
     language: string;
     theme: OfficeTheme;
-}, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {}, HTMLDivElement>;
+}, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=OnlyOfficeEditor.vue.d.ts.map

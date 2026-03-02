@@ -16,7 +16,6 @@ export declare class EditorServer {
     private urlsMap;
     private downloadId;
     private downloadParts;
-    private options;
     constructor({ x2tPath, user }?: {
         x2tPath?: string;
         user?: User;

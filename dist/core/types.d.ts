@@ -163,7 +163,7 @@ export declare const enum AvsFileType {
     AVS_FILE_DRAW_VSTM = 16390
 }
 export interface X2tConvertParams {
-    data: ArrayBuffer | never;
+    data: ArrayBuffer;
     fileFrom: string;
     fileTo: string;
     formatFrom?: number;
