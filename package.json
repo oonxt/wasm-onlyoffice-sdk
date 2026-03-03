@@ -1,6 +1,6 @@
 {
   "name": "wasm-onlyoffice-sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/oonxt/wasm-onlyoffice-sdk#readme",
@@ -11,9 +11,19 @@
   "bugs": {
     "url": "https://github.com/oonxt/wasm-onlyoffice-sdk/issues"
   },
-  "keywords": ["onlyoffice", "wasm", "webassembly", "document-editor", "react", "vue", "office"],
+  "keywords": [
+    "onlyoffice",
+    "wasm",
+    "webassembly",
+    "document-editor",
+    "react",
+    "vue",
+    "office"
+  ],
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -39,9 +49,15 @@
     "vue": ">=3"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "vue": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   },
   "dependencies": {
     "eventemitter3": "^5.0.1"
