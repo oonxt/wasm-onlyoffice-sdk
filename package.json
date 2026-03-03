@@ -1,6 +1,6 @@
 {
   "name": "wasm-onlyoffice-sdk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/oonxt/wasm-onlyoffice-sdk#readme",

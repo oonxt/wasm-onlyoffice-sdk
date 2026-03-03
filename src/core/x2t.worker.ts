@@ -16,7 +16,7 @@ async function initX2t(): Promise<void> {
   const scriptUrl = BASE_URL + "x2t.js";
 
   Object.assign(self, {
-    __filename: self.location.origin + BASE_URL,
+    __filename: /^https?:\/\//.test(BASE_URL) ? BASE_URL : self.location.origin + BASE_URL,
   });
 
   importScripts(scriptUrl);

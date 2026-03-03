@@ -38,7 +38,7 @@ class K {
       try {
         this.worker = new Worker(new URL(
           /* @vite-ignore */
-          "" + new URL("assets/x2t.worker-DNfDqBEG.js", import.meta.url).href,
+          "" + new URL("assets/x2t.worker-CjNFjWSw.js", import.meta.url).href,
           import.meta.url
         )), this.worker.onmessage = this.handleWorkerMessage, this.worker.onerror = this.handleWorkerError, this.sendMessage("init", { x2tPath: this.x2tPath }).then(A).catch(B);
       } catch (Q) {
