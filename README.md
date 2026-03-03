@@ -173,6 +173,15 @@ import { EditorServer, X2tConverter, MockSocket } from 'wasm-onlyoffice-sdk'
 
 `EditorServer` manages the editor lifecycle and document communication. `X2tConverter` wraps the WASM-based file format converter. `MockSocket` provides the in-browser socket layer that replaces the OnlyOffice server backend.
 
+## License
+
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0-or-later).
+
+This license is chosen to comply with the licenses of the third-party components this project depends on:
+
+- **OnlyOffice Web Apps** — Copyright (C) Ascensio System SIA, licensed under [AGPL-3.0](https://github.com/ONLYOFFICE/web-apps/blob/master/LICENSE)
+- **office-website** (architectural reference) — Copyright (C) baotlake, licensed under [AGPL-3.0](https://github.com/baotlake/office-website/blob/main/LICENSE.txt)
+
 ## Credits
 
 - SDK implementation references [baotlake/office-website](https://github.com/baotlake/office-website)
