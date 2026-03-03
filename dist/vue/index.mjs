@@ -39,9 +39,9 @@ class AA {
       try {
         this.worker = new Worker(new URL(
           /* @vite-ignore */
-          "/assets/x2t.worker-CoK0YzA0.js",
+          "" + new URL("../assets/x2t.worker-DNfDqBEG.js", import.meta.url).href,
           import.meta.url
-        ), { type: "module" }), this.worker.onmessage = this.handleWorkerMessage, this.worker.onerror = this.handleWorkerError, this.sendMessage("init", { x2tPath: this.x2tPath }).then(B).catch(A);
+        )), this.worker.onmessage = this.handleWorkerMessage, this.worker.onerror = this.handleWorkerError, this.sendMessage("init", { x2tPath: this.x2tPath }).then(B).catch(A);
       } catch (Q) {
         this.initPromise = null, A(Q);
       }

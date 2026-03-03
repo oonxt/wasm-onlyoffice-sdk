@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
     dts({

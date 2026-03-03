@@ -1,8 +1,10 @@
 node_modules/
-dist/
 *.local
 .DS_Store
 .vscode/
+.idea
+.claude
+.playwright-mcp
 packages/
 examples/
 scripts/

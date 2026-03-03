@@ -2,6 +2,8 @@
 
 Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly.
 
+**Demo:** [oonxt/wasm-onlyoffice-demo](https://github.com/oonxt/wasm-onlyoffice-demo)
+
 ## Prerequisites
 
 This SDK requires two sets of static assets to be self-hosted on the same origin as your application.
@@ -148,3 +150,8 @@ import { EditorServer, X2tConverter, MockSocket } from 'wasm-onlyoffice-sdk'
 ```
 
 `EditorServer` manages the editor lifecycle and document communication. `X2tConverter` wraps the WASM-based file format converter. `MockSocket` provides the in-browser socket layer that replaces the OnlyOffice server backend.
+
+## Credits
+
+- SDK implementation references [baotlake/office-website](https://github.com/baotlake/office-website)
+- OnlyOffice web-apps static assets are extracted from the OnlyOffice DocumentServer Docker image: [onlyoffice/documentserver](https://hub.docker.com/r/onlyoffice/documentserver)

@@ -79,7 +79,7 @@ export class X2tConverter {
 
     this.initPromise = new Promise<void>((resolve, reject) => {
       try {
-        this.worker = new Worker(new URL('./x2t.worker.ts', import.meta.url), { type: 'module' })
+        this.worker = new Worker(new URL('./x2t.worker.ts', import.meta.url))
         this.worker.onmessage = this.handleWorkerMessage
         this.worker.onerror = this.handleWorkerError
 
