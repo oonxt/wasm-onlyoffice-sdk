@@ -6,13 +6,15 @@ Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly
 
 ## Prerequisites
 
-This SDK requires two sets of static assets to be self-hosted on the same origin as your application.
+This SDK requires two sets of static assets:
 
-**OnlyOffice web-apps** — the `v9.3.0.24-1/` directory from the WASM build.
+**OnlyOffice web-apps** — the `v9.3.0.24-1/` directory from the WASM build. Can be served from the same origin or a CDN.
 
-**x2t WASM converter** — the `x2t-1/` directory containing `x2t.js` and `x2t.wasm`.
+**x2t WASM converter** — the `x2t-1/` directory containing `x2t.js` and `x2t.wasm`. Must be served from the **same origin** as your app (required for the Web Worker).
 
-Both directories must be served from the same origin as your app. The simplest approach is to place them in your project's `public/` folder so they are accessible at `/v9.3.0.24-1/` and `/x2t-1/` respectively.
+### Same-origin setup
+
+Place assets in your project's `public/` folder:
 
 ```
 your-project/
@@ -20,6 +22,26 @@ your-project/
     v9.3.0.24-1/   ← OnlyOffice web-apps assets
     x2t-1/         ← x2t WASM converter (x2t.js + x2t.wasm)
 ```
+
+Pass a relative path to `assetsPath`:
+
+```tsx
+<OnlyOfficeEditor assetsPath="/v9.3.0.24-1" x2tPath="/x2t-1" ... />
+```
+
+### CDN setup
+
+`assetsPath` also accepts a full URL. The SDK will automatically handle cross-origin restrictions by keeping the editor frame same-origin while loading web-apps assets from the CDN:
+
+```tsx
+<OnlyOfficeEditor
+  assetsPath="https://cdn.example.com/v9.3.0.24-1"
+  x2tPath="/x2t-1"
+  ...
+/>
+```
+
+> **Note:** `x2tPath` must remain same-origin regardless of where `assetsPath` points.
 
 ## Installation
 

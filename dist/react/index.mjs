@@ -1,61 +1,60 @@
-import { jsx as f } from "react/jsx-runtime";
-import { useRef as W, useEffect as X, useLayoutEffect as j } from "react";
-import { EditorServer as M, getDocumentType as O, MockSocket as d, createXHRProxy as P, io as C } from "../index.mjs";
-function _({
-  assetsPath: h,
-  x2tPath: L = "/x2t-1",
-  file: m,
-  fileUrl: w,
-  newDocument: y,
-  language: q = "en",
-  theme: x = "theme-light",
-  user: g = { id: "uid", name: "User" },
-  onReady: l,
-  onDocumentStateChange: a,
-  onSave: F,
-  onError: n,
-  style: A,
+import { jsx as w } from "react/jsx-runtime";
+import { useRef as X, useEffect as j, useLayoutEffect as M } from "react";
+import { EditorServer as N, getDocumentType as $, MockSocket as l, createXHRProxy as B, io as F } from "../index.mjs";
+function J({
+  assetsPath: S,
+  x2tPath: q = "/x2t-1",
+  file: y,
+  fileUrl: v,
+  newDocument: D,
+  language: x = "en",
+  theme: A = "theme-light",
+  user: b = { id: "uid", name: "User" },
+  onReady: p,
+  onDocumentStateChange: u,
+  onSave: z,
+  onError: t,
+  style: P,
   className: R
 }) {
-  const r = W(!1);
-  return X(() => {
-    const c = (t) => {
-      r.current && (t.preventDefault(), t.returnValue = "");
+  const d = X(!1), r = S.replace(/\/$/, ""), f = /^https?:\/\//.test(r);
+  j(() => {
+    const c = (a) => {
+      d.current && (a.preventDefault(), a.returnValue = "");
     };
     return window.addEventListener("beforeunload", c), () => window.removeEventListener("beforeunload", c);
-  }, []), j(() => {
-    const c = h + "/web-apps/apps/api/documents/api.js", t = new M({ x2tPath: L, user: g });
-    m ? t.open(m) : w ? t.openUrl(w) : y ? t.openNew(y) : t.openNew("docx");
-    const i = t.getDocument(), H = O(i.fileType);
-    let s = null;
-    const v = ({ socket: e }) => t.handleConnect({ socket: e }), D = ({ socket: e }) => t.handleDisconnect({ socket: e });
-    d.on("connect", v), d.on("disconnect", D);
-    const I = () => {
-      const e = document.querySelector('iframe[name="frameEditor"]'), o = e == null ? void 0 : e.contentWindow, p = e == null ? void 0 : e.contentDocument;
-      if (!p || !o) {
-        n == null || n(new Error("Iframe not loaded"));
+  }, []), M(() => {
+    const c = r + "/web-apps/apps/api/documents/api.js", a = f ? r + "/web-apps/apps/api/documents/" : location.origin, n = new N({ x2tPath: q, user: b });
+    y ? n.open(y) : v ? n.openUrl(v) : D ? n.openNew(D) : n.openNew("docx");
+    const s = n.getDocument(), I = $(s.fileType);
+    let i = null;
+    const g = ({ socket: e }) => n.handleConnect({ socket: e }), k = ({ socket: e }) => n.handleDisconnect({ socket: e });
+    l.on("connect", g), l.on("disconnect", k);
+    const O = () => {
+      const e = document.querySelector('iframe[name="frameEditor"]'), o = e == null ? void 0 : e.contentWindow, h = e == null ? void 0 : e.contentDocument;
+      if (!h || !o) {
+        t == null || t(new Error("Iframe not loaded"));
         return;
       }
-      const T = P(o.XMLHttpRequest), S = o.Worker;
-      T.use((u) => t.handleRequest(u)), Object.assign(o, {
-        io: C,
-        XMLHttpRequest: T,
-        Worker: function(u, U) {
-          const E = new URL(u, location.origin);
-          return new S(E.href.replace(E.origin, location.origin), U);
+      const E = B(o.XMLHttpRequest), U = o.Worker;
+      E.use((m) => n.handleRequest(m)), Object.assign(o, {
+        io: F,
+        XMLHttpRequest: E,
+        Worker: function(m, W) {
+          return new U(new URL(m, a).href, W);
         }
       });
-      const b = p.createElement("script");
-      b.src = c, p.body.appendChild(b), l == null || l();
-    }, k = () => {
-      s = new window.DocsAPI.DocEditor("placeholder", {
+      const L = h.createElement("script");
+      L.src = c, h.body.appendChild(L), p == null || p();
+    }, T = () => {
+      i = new window.DocsAPI.DocEditor("placeholder", {
         document: {
-          fileType: i.fileType,
-          key: i.key,
-          title: i.title,
-          url: i.url,
+          fileType: s.fileType,
+          key: s.key,
+          title: s.title,
+          url: s.url,
           permissions: {
-            edit: i.fileType !== "pdf",
+            edit: s.fileType !== "pdf",
             chat: !1,
             rename: !0,
             protect: !0,
@@ -63,27 +62,27 @@ function _({
             print: !1
           }
         },
-        documentType: H,
+        documentType: I,
         editorConfig: {
-          lang: q,
+          lang: x,
           coEditing: { mode: "fast", change: !1 },
-          user: { ...g },
+          user: { ...b },
           customization: {
-            uiTheme: x,
+            uiTheme: A,
             features: { spellcheck: { change: !1 } }
           }
         },
         events: {
-          onAppReady: () => I(),
+          onAppReady: () => O(),
           onDocumentStateChange: (e) => {
-            e.data && (r.current = !0), a == null || a(e.data);
+            e.data && (d.current = !0), u == null || u(e.data);
           },
-          onError: (e) => n == null ? void 0 : n(new Error(String(e))),
+          onError: (e) => t == null ? void 0 : t(new Error(String(e))),
           onSaveDocument: () => {
-            r.current = !1;
+            d.current = !1;
           },
           writeFile: () => {
-            r.current = !1;
+            d.current = !1;
           }
         },
         width: "100%",
@@ -93,23 +92,26 @@ function _({
     return (() => {
       var o;
       if ((o = window.DocsAPI) != null && o.DocEditor) {
-        k();
+        T();
         return;
       }
       let e = document.querySelector(`script[src="${c}"]`);
-      e || (e = document.createElement("script"), e.src = c, document.head.appendChild(e)), e.onload = () => k(), e.onerror = () => n == null ? void 0 : n(new Error("Failed to load DocsAPI script"));
+      e || (e = document.createElement("script"), e.src = c, document.head.appendChild(e)), e.onload = () => T(), e.onerror = () => t == null ? void 0 : t(new Error("Failed to load DocsAPI script"));
     })(), () => {
       var e;
-      d.off("connect", v), d.off("disconnect", D), (e = s == null ? void 0 : s.destroyEditor) == null || e.call(s), t.destroy();
+      l.off("connect", g), l.off("disconnect", k), (e = i == null ? void 0 : i.destroyEditor) == null || e.call(i), n.destroy();
     };
-  }, []), /* @__PURE__ */ f("div", { style: { width: "100%", height: "100%", ...A }, className: R, children: /* @__PURE__ */ f("div", { id: "placeholder", style: { width: "100%", height: "100%" }, children: /* @__PURE__ */ f(
+  }, []);
+  const C = f ? void 0 : r + "/web-apps/apps/api/documents/preload.html", H = f ? `<!DOCTYPE html><html><head><base href="${r}/web-apps/apps/api/documents/"></head><body></body></html>` : void 0;
+  return /* @__PURE__ */ w("div", { style: { width: "100%", height: "100%", ...P }, className: R, children: /* @__PURE__ */ w("div", { id: "placeholder", style: { width: "100%", height: "100%" }, children: /* @__PURE__ */ w(
     "iframe",
     {
       style: { width: 0, height: 0, display: "none" },
-      src: h + "/web-apps/apps/api/documents/preload.html"
+      src: C,
+      srcDoc: H
     }
   ) }) });
 }
 export {
-  _ as OnlyOfficeEditor
+  J as OnlyOfficeEditor
 };

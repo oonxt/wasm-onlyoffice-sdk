@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 
 defineOptions({ inheritAttrs: false })
 import { EditorServer } from '../core/editor-server'
@@ -40,8 +40,24 @@ let editor: DocEditor | null = null
 const handleConnect = ({ socket }: { socket: MockSocket }) => server?.handleConnect({ socket })
 const handleDisconnect = ({ socket }: { socket: MockSocket }) => server?.handleDisconnect({ socket })
 
+// For CDN: srcdoc keeps the frame same-origin; <base href> routes assets to CDN.
+// For same-origin: load preload.html normally.
+const preloadSrc = computed(() => {
+  const base = props.assetsPath.replace(/\/$/, '')
+  return /^https?:\/\//.test(base) ? undefined : base + '/web-apps/apps/api/documents/preload.html'
+})
+const preloadSrcdoc = computed(() => {
+  const base = props.assetsPath.replace(/\/$/, '')
+  return /^https?:\/\//.test(base)
+    ? `<!DOCTYPE html><html><head><base href="${base}/web-apps/apps/api/documents/"></head><body></body></html>`
+    : undefined
+})
+
 onMounted(() => {
-  const apiUrl = props.assetsPath + '/web-apps/apps/api/documents/api.js'
+  const base = props.assetsPath.replace(/\/$/, '')
+  const isCDN = /^https?:\/\//.test(base)
+  const apiUrl = base + '/web-apps/apps/api/documents/api.js'
+  const workerBase = isCDN ? base + '/web-apps/apps/api/documents/' : location.origin
   const user = props.user ?? { id: 'uid', name: 'User' }
 
   server = new EditorServer({ x2tPath: props.x2tPath, user })
@@ -76,8 +92,7 @@ onMounted(() => {
       io,
       XMLHttpRequest: XHR,
       Worker: (url: string, options?: WorkerOptions) => {
-        const u = new URL(url, location.origin)
-        return new _Worker(u.href.replace(u.origin, location.origin), options)
+        return new _Worker(new URL(url, workerBase).href, options)
       },
     })
 
@@ -145,7 +160,8 @@ onUnmounted(() => {
     <div id="placeholder" style="width: 100%; height: 100%">
       <iframe
         style="width: 0; height: 0; display: none"
-        :src="assetsPath + '/web-apps/apps/api/documents/preload.html'"
+        :src="preloadSrc"
+        :srcdoc="preloadSrcdoc"
       />
     </div>
   </div>
