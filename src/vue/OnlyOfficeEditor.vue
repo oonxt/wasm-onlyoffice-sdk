@@ -91,13 +91,15 @@ onMounted(() => {
     Object.assign(win, {
       io,
       XMLHttpRequest: XHR,
-      Worker: (url: string, options?: WorkerOptions) => {
-        return new _Worker(new URL(url, workerBase).href, options)
-      },
+      Worker: new Proxy(_Worker, {
+        construct(target, [url, options]) {
+          return Reflect.construct(target, [new URL(url, workerBase).href, options])
+        },
+      }),
     })
 
     const script = iframeDoc.createElement('script')
-    script.src = apiUrl
+    script.src = new URL(apiUrl, location.origin).href
     iframeDoc.body.appendChild(script)
     emit('ready')
   }
