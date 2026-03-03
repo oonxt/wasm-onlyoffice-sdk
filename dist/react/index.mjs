@@ -1,6 +1,6 @@
 import { jsx as w } from "react/jsx-runtime";
-import { useRef as X, useEffect as j, useLayoutEffect as M } from "react";
-import { EditorServer as N, getDocumentType as $, MockSocket as l, createXHRProxy as B, io as F } from "../index.mjs";
+import { useRef as X, useEffect as j, useLayoutEffect as F } from "react";
+import { EditorServer as M, getDocumentType as N, MockSocket as l, createXHRProxy as $, io as B } from "../index.mjs";
 function J({
   assetsPath: S,
   x2tPath: q = "/x2t-1",
@@ -23,10 +23,10 @@ function J({
       d.current && (a.preventDefault(), a.returnValue = "");
     };
     return window.addEventListener("beforeunload", c), () => window.removeEventListener("beforeunload", c);
-  }, []), M(() => {
-    const c = r + "/web-apps/apps/api/documents/api.js", a = f ? r + "/web-apps/apps/api/documents/" : location.origin, n = new N({ x2tPath: q, user: b });
+  }, []), F(() => {
+    const c = r + "/web-apps/apps/api/documents/api.js", a = f ? r + "/web-apps/apps/api/documents/" : location.origin, n = new M({ x2tPath: q, user: b });
     y ? n.open(y) : v ? n.openUrl(v) : D ? n.openNew(D) : n.openNew("docx");
-    const s = n.getDocument(), I = $(s.fileType);
+    const s = n.getDocument(), I = N(s.fileType);
     let i = null;
     const g = ({ socket: e }) => n.handleConnect({ socket: e }), k = ({ socket: e }) => n.handleDisconnect({ socket: e });
     l.on("connect", g), l.on("disconnect", k);
@@ -36,9 +36,9 @@ function J({
         t == null || t(new Error("Iframe not loaded"));
         return;
       }
-      const E = B(o.XMLHttpRequest), U = o.Worker;
+      const E = $(o.XMLHttpRequest), U = o.Worker;
       E.use((m) => n.handleRequest(m)), Object.assign(o, {
-        io: F,
+        io: B,
         XMLHttpRequest: E,
         Worker: function(m, W) {
           return new U(new URL(m, a).href, W);
@@ -48,6 +48,7 @@ function J({
       L.src = c, h.body.appendChild(L), p == null || p();
     }, T = () => {
       i = new window.DocsAPI.DocEditor("placeholder", {
+        isLocalFile: !0,
         document: {
           fileType: s.fileType,
           key: s.key,

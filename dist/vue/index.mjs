@@ -915,6 +915,7 @@ const iA = {
         m.src = E, p.body.appendChild(m), Q("ready");
       }, M = () => {
         G = new window.DocsAPI.DocEditor("placeholder", {
+          isLocalFile: !0,
           document: {
             fileType: e.fileType,
             key: e.key,

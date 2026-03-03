@@ -104,6 +104,7 @@ onMounted(() => {
 
   const createEditor = () => {
     editor = new (window as any).DocsAPI.DocEditor('placeholder', {
+      isLocalFile: true,
       document: {
         fileType: doc.fileType,
         key: doc.key,
