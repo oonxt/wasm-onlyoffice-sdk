@@ -8,46 +8,42 @@ Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly
 
 This SDK requires two sets of static assets:
 
-**OnlyOffice web-apps** — the `v9.3.0.24-1/` directory from the WASM build.
+**OnlyOffice web-apps scaffold** — a small set of HTML files (~2 MB) that must be served from the **same origin** as your app. These HTML files contain `<base href>` tags pointing to a CDN, so the browser loads the actual heavy content (SDK JS, fonts, CSS) from the CDN at runtime. You do not need to self-host the full OnlyOffice SDK.
 
-**x2t WASM converter** — a directory containing `x2t.js` and `x2t.wasm`.
+**x2t WASM converter** — `x2t.js` and `x2t.wasm`. Can be served from the same origin or a CDN.
 
-Both can be served from the same origin or a CDN.
+### Setup
 
-### Same-origin setup
-
-Place assets in your project's `public/` folder:
+Download the web-apps scaffold from the [demo repo](https://github.com/oonxt/wasm-onlyoffice-demo) (`public/` directory) and place it in your project:
 
 ```
 your-project/
   public/
-    v9.3.0.24-1/   ← OnlyOffice web-apps assets
-    x2t-1/         ← x2t WASM converter (x2t.js + x2t.wasm)
+    v9.3.0.24-1/   ← web-apps scaffold (HTML files + api.js, ~2 MB)
+    x2t-1/         ← x2t WASM converter (x2t.js + x2t.wasm), optional if using CDN
 ```
 
 ```tsx
 <OnlyOfficeEditor assetsPath="/v9.3.0.24-1" x2tPath="/x2t-1" ... />
 ```
 
-### CDN setup
+The scaffold's HTML files have `<base href>` tags pre-configured to load assets from a public CDN. You can swap those URLs to your own CDN if needed.
 
-Both `assetsPath` and `x2tPath` accept full URLs:
+### Using a CDN for x2t
+
+`x2tPath` accepts either a local path or a full CDN URL:
 
 ```tsx
 <OnlyOfficeEditor
-  assetsPath="https://cdn.example.com/v9.3.0.24-1"
+  assetsPath="/v9.3.0.24-1"
   x2tPath="https://cdn.example.com/x2t"
   ...
 />
 ```
 
-The SDK handles cross-origin restrictions automatically:
-- The editor frame stays same-origin; `assetsPath` CDN content is loaded inside it via a `<base href>`.
-- The x2t worker script is bundled in the SDK (always same-origin). `x2tPath` only controls where the worker fetches `x2t.js` and `x2t.wasm` — these can be on a CDN as long as the CDN serves the WASM file with `Access-Control-Allow-Origin: *` (required by `WebAssembly.compileStreaming`).
+The x2t worker script is bundled inside the SDK (always same-origin). `x2tPath` only controls where the worker fetches `x2t.js` and `x2t.wasm`. When using a CDN, the server must include `Access-Control-Allow-Origin: *` on the WASM file (required by `WebAssembly.compileStreaming`).
 
 ### Vite setup
-
-If you use Vite, add the following to your `vite.config`:
 
 ```ts
 export default defineConfig({
@@ -56,13 +52,13 @@ export default defineConfig({
   },
   server: {
     fs: {
-      allow: ['../..'],  // only needed when using a local file: reference to the SDK
+      allow: ['../..'],  // only needed when referencing the SDK via a local file: path
     },
   },
 })
 ```
 
-`optimizeDeps.exclude` is required because the SDK resolves its worker via `new URL(...)` which Vite's pre-bundler would break.
+`optimizeDeps.exclude` is required because the SDK resolves its bundled worker via `new URL(...)`, which Vite's pre-bundler would break.
 
 ## Installation
 
