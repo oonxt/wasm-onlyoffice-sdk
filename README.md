@@ -41,7 +41,16 @@ The scaffold's HTML files have `<base href>` tags pre-configured to load assets 
 />
 ```
 
-The x2t worker script is bundled inside the SDK (always same-origin). `x2tPath` only controls where the worker fetches `x2t.js` and `x2t.wasm`. When using a CDN, the server must include `Access-Control-Allow-Origin: *` on the WASM file (required by `WebAssembly.compileStreaming`).
+The x2t worker script is bundled inside the SDK (always same-origin). `x2tPath` only controls where the worker fetches `x2t.js` and `x2t.wasm`.
+
+Both files are brotli-compressed and must be served with the following headers:
+
+| File | `Content-Type` | `Content-Encoding` |
+|------|---------------|-------------------|
+| `x2t.js` | `application/javascript` | `br` |
+| `x2t.wasm` | `application/wasm` | `br` |
+
+When using a CDN, also add `Access-Control-Allow-Origin: *` on both files.
 
 ### Vite setup
 
