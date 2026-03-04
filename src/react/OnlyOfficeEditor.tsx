@@ -107,7 +107,7 @@ export function OnlyOfficeEditor({
       })
 
       const script = iframeDoc.createElement('script')
-      script.src = apiUrl
+      script.src = new URL(apiUrl, location.origin).href
       iframeDoc.body.appendChild(script)
       onReady?.()
     }
