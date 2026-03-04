@@ -50,7 +50,6 @@ export function OnlyOfficeEditor({
 }: OnlyOfficeEditorProps) {
   const isDirty = useRef(false)
   const base = assetsPath.replace(/\/$/, '')
-  const isCDN = /^https?:\/\//.test(base)
 
   // Warn on unload if there are unsaved changes
   useEffect(() => {
@@ -63,8 +62,6 @@ export function OnlyOfficeEditor({
 
   useLayoutEffect(() => {
     const apiUrl = base + '/web-apps/apps/api/documents/api.js'
-    // For CDN, resolve Worker URLs against CDN base; for same-origin, use app origin
-    const workerBase = isCDN ? base + '/web-apps/apps/api/documents/' : location.origin
     const server = new EditorServer({ x2tPath, user })
 
     // Open document from the provided source
@@ -102,7 +99,7 @@ export function OnlyOfficeEditor({
         io,
         XMLHttpRequest: XHR,
         Worker: function (url: string, options?: WorkerOptions) {
-          return new _Worker(new URL(url, workerBase).href, options)
+          return new _Worker(new URL(url, location.origin).href, options)
         },
       })
 
@@ -177,13 +174,7 @@ export function OnlyOfficeEditor({
     }
   }, []) // Run only once on mount
 
-  // For CDN: use srcdoc to keep the iframe same-origin (contentDocument is accessible),
-  // with <base href> so relative asset URLs inside the frame resolve to CDN.
-  // For same-origin: load preload.html normally.
-  const preloadSrc = isCDN ? undefined : base + '/web-apps/apps/api/documents/preload.html'
-  const preloadSrcdoc = isCDN
-    ? `<!DOCTYPE html><html><head><base href="${base}/web-apps/apps/api/documents/"></head><body></body></html>`
-    : undefined
+  const preloadSrc = base + '/web-apps/apps/api/documents/preload.html'
 
   return (
     <div style={{ width: '100%', height: '100%', ...style }} className={className}>
@@ -191,7 +182,6 @@ export function OnlyOfficeEditor({
         <iframe
           style={{ width: 0, height: 0, display: 'none' }}
           src={preloadSrc}
-          srcDoc={preloadSrcdoc}
         />
       </div>
     </div>

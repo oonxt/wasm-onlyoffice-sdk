@@ -40,24 +40,11 @@ let editor: DocEditor | null = null
 const handleConnect = ({ socket }: { socket: MockSocket }) => server?.handleConnect({ socket })
 const handleDisconnect = ({ socket }: { socket: MockSocket }) => server?.handleDisconnect({ socket })
 
-// For CDN: srcdoc keeps the frame same-origin; <base href> routes assets to CDN.
-// For same-origin: load preload.html normally.
-const preloadSrc = computed(() => {
-  const base = props.assetsPath.replace(/\/$/, '')
-  return /^https?:\/\//.test(base) ? undefined : base + '/web-apps/apps/api/documents/preload.html'
-})
-const preloadSrcdoc = computed(() => {
-  const base = props.assetsPath.replace(/\/$/, '')
-  return /^https?:\/\//.test(base)
-    ? `<!DOCTYPE html><html><head><base href="${base}/web-apps/apps/api/documents/"></head><body></body></html>`
-    : undefined
-})
+const preloadSrc = computed(() => props.assetsPath.replace(/\/$/, '') + '/web-apps/apps/api/documents/preload.html')
 
 onMounted(() => {
   const base = props.assetsPath.replace(/\/$/, '')
-  const isCDN = /^https?:\/\//.test(base)
   const apiUrl = base + '/web-apps/apps/api/documents/api.js'
-  const workerBase = isCDN ? base + '/web-apps/apps/api/documents/' : location.origin
   const user = props.user ?? { id: 'uid', name: 'User' }
 
   server = new EditorServer({ x2tPath: props.x2tPath, user })
@@ -93,7 +80,7 @@ onMounted(() => {
       XMLHttpRequest: XHR,
       Worker: new Proxy(_Worker, {
         construct(target, [url, options]) {
-          return Reflect.construct(target, [new URL(url, workerBase).href, options])
+          return Reflect.construct(target, [new URL(url, location.origin).href, options])
         },
       }),
     })
@@ -164,7 +151,6 @@ onUnmounted(() => {
       <iframe
         style="width: 0; height: 0; display: none"
         :src="preloadSrc"
-        :srcdoc="preloadSrcdoc"
       />
     </div>
   </div>
