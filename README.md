@@ -8,9 +8,11 @@ Offline OnlyOffice document editor SDK for React and Vue, powered by WebAssembly
 
 This SDK requires two sets of static assets:
 
-**OnlyOffice web-apps** — the `v9.3.0.24-1/` directory from the WASM build. Can be served from the same origin or a CDN.
+**OnlyOffice web-apps** — the `v9.3.0.24-1/` directory from the WASM build.
 
-**x2t WASM converter** — the `x2t-1/` directory containing `x2t.js` and `x2t.wasm`. Must be served from the **same origin** as your app (required for the Web Worker).
+**x2t WASM converter** — a directory containing `x2t.js` and `x2t.wasm`.
+
+Both can be served from the same origin or a CDN.
 
 ### Same-origin setup
 
@@ -23,25 +25,44 @@ your-project/
     x2t-1/         ← x2t WASM converter (x2t.js + x2t.wasm)
 ```
 
-Pass a relative path to `assetsPath`:
-
 ```tsx
 <OnlyOfficeEditor assetsPath="/v9.3.0.24-1" x2tPath="/x2t-1" ... />
 ```
 
 ### CDN setup
 
-`assetsPath` also accepts a full URL. The SDK will automatically handle cross-origin restrictions by keeping the editor frame same-origin while loading web-apps assets from the CDN:
+Both `assetsPath` and `x2tPath` accept full URLs:
 
 ```tsx
 <OnlyOfficeEditor
   assetsPath="https://cdn.example.com/v9.3.0.24-1"
-  x2tPath="/x2t-1"
+  x2tPath="https://cdn.example.com/x2t"
   ...
 />
 ```
 
-> **Note:** `x2tPath` must remain same-origin regardless of where `assetsPath` points.
+The SDK handles cross-origin restrictions automatically:
+- The editor frame stays same-origin; `assetsPath` CDN content is loaded inside it via a `<base href>`.
+- The x2t worker script is bundled in the SDK (always same-origin). `x2tPath` only controls where the worker fetches `x2t.js` and `x2t.wasm` — these can be on a CDN as long as the CDN serves the WASM file with `Access-Control-Allow-Origin: *` (required by `WebAssembly.compileStreaming`).
+
+### Vite setup
+
+If you use Vite, add the following to your `vite.config`:
+
+```ts
+export default defineConfig({
+  optimizeDeps: {
+    exclude: ['wasm-onlyoffice-sdk'],
+  },
+  server: {
+    fs: {
+      allow: ['../..'],  // only needed when using a local file: reference to the SDK
+    },
+  },
+})
+```
+
+`optimizeDeps.exclude` is required because the SDK resolves its worker via `new URL(...)` which Vite's pre-bundler would break.
 
 ## Installation
 
